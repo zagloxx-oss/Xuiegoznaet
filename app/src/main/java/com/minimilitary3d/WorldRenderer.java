@@ -32,6 +32,7 @@ import net.mgsx.gltf.scene3d.lights.PointLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 
 public class WorldRenderer {
     private SceneManager sceneManager;
@@ -193,7 +194,7 @@ public class WorldRenderer {
         neonLights[1] = makeNeonEx(new Color(0f, 0.5f, 1f, 1f), new Vector3(25, 10, -25), 3000f, 60f);
         neonLights[2] = makeNeonEx(new Color(1f, 0f, 0.5f, 1f), new Vector3(-25, 10, 25), 3000f, 60f);
         neonLights[3] = makeNeonEx(new Color(0f, 0.5f, 1f, 1f), new Vector3(25, 10, 25), 3000f, 60f);
-        for (PointLightEx l : neonLights) environment.add(l);
+        for (PointLightEx l : neonLights) if (l != null) environment.add(l);
 
         flashLight = makeNeonEx(new Color(1f, 1f, 1f, 1f), new Vector3(0, 0, 0), 10f, 20f);
         // flashLight disabled (PBR point light limit is 5)
