@@ -13,13 +13,24 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Build desktop jar
+      - name: Build FAT jar
         run: ./gradlew :desktop:jar --no-daemon
+        shell: bash
+      - name: Verify jar contents
+        run: |
+          echo "=== Размер jar ==="
+          ls -lh desktop/build/libs/
+          echo "=== GDX внутри? ==="
+          jar tf desktop/build/libs/MiniMilitary3D.jar | grep -c "com/badlogic/gdx" || echo "0"
+          echo "=== Ассеты внутри? ==="
+          jar tf desktop/build/libs/MiniMilitary3D.jar | grep -E "(models/|fonts/|music/|interface/)" | head -10
+          echo "=== Нативы внутри? ==="
+          jar tf desktop/build/libs/MiniMilitary3D.jar | grep -E "\.(dll|so|dylib)$" | head -5
         shell: bash
       - name: Prepare
         run: |
           mkdir -p dist
-          cp desktop/build/libs/desktop.jar dist/MiniMilitary3D.jar
+          cp desktop/build/libs/MiniMilitary3D.jar dist/
         shell: bash
       - name: Create EXE
         run: jpackage --type app-image --input dist --main-jar MiniMilitary3D.jar --main-class com.minimilitary3d.DesktopLauncher --name "MiniMilitary3D" --app-version 0.2 --dest dist-final
@@ -27,7 +38,7 @@ jobs:
       - name: Bundle run.bat
         run: cp desktop/run.bat dist-final/MiniMilitary3D/run.bat
         shell: bash
-      - name: Zip app-image
+      - name: Zip
         run: |
           cd dist-final
           powershell Compress-Archive -Path MiniMilitary3D -DestinationPath MiniMilitary3D-PORTABLE.zip -Force
