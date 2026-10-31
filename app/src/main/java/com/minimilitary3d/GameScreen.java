@@ -173,6 +173,15 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        try {
+            showInternal();
+        } catch (Throwable gameCrash) {
+            MainGame.logError(gameCrash);
+            throw new RuntimeException("GameScreen.show() crashed", gameCrash);
+        }
+    }
+
+    private void showInternal() {
         camera = new PerspectiveCamera(75, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.near = 0.05f;
         camera.far = Math.max(100f, GameSettings.viewDistance);
@@ -700,6 +709,16 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        try {
+            renderInternal(delta);
+        } catch (Throwable gameCrash) {
+            MainGame.logError(gameCrash);
+            if (gameCrash instanceof RuntimeException) throw (RuntimeException)gameCrash;
+            throw new RuntimeException(gameCrash);
+        }
+    }
+
+    private void renderInternal(float delta) {
         Gdx.gl.glClearColor(0.02f, 0.01f, 0.05f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 

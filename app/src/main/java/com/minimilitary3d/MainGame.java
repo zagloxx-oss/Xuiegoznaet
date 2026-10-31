@@ -2,6 +2,10 @@ package com.minimilitary3d;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
 
 public class MainGame extends Game {
     @Override
