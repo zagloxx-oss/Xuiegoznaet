@@ -3,26 +3,20 @@ package com.minimilitary3d;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 
 public class DesktopLauncher {
-    public static void main(String[] args) throws Exception {
-        // === Файл-лог для диагностики ===
-        try {
-            File logFile = new File(System.getProperty("user.home"), "MiniMilitary3D.log");
-            PrintStream ps = new PrintStream(new FileOutputStream(logFile, true), true, "UTF-8");
-            System.setOut(ps);
-            System.setErr(ps);
-            System.out.println("\n\n===== LAUNCH " + new Date() + " =====");
-            System.out.println("CWD: " + System.getProperty("user.dir"));
-            System.out.println("JAR: " + DesktopLauncher.class.getProtectionDomain().getCodeSource().getLocation());
-            System.out.println("Log file: " + logFile.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private static final String LOG = "MiniMilitary3D_run.log";
+
+    public static void main(String[] args) {
+        log("=== LAUNCH " + new Date() + " ===");
+        log("Java: " + System.getProperty("java.version"));
+        log("CWD: " + System.getProperty("user.dir"));
+        log("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version"));
+        log("JAR: " + DesktopLauncher.class.getProtectionDomain().getCodeSource().getLocation());
 
         try {
             Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -31,13 +25,21 @@ public class DesktopLauncher {
             config.setWindowSizeLimits(960, 540, -1, -1);
             config.useVsync(true);
             config.setForegroundFPS(120);
-
+            log("Config OK, starting Lwjgl3Application...");
             new Lwjgl3Application(new MainGame(), config);
+            log("Lwjgl3Application exited normally");
         } catch (Throwable t) {
-            System.err.println("FATAL ERROR:");
-            t.printStackTrace();
-            System.err.flush();
-            throw t;
+            log("FATAL ERROR:");
+            StringWriter sw = new StringWriter();
+            t.printStackTrace(new PrintWriter(sw));
+            log(sw.toString());
         }
+    }
+
+    private static void log(String msg) {
+        System.out.println(msg);
+        try (FileWriter fw = new FileWriter(LOG, true)) {
+            fw.write(msg + "\n");
+        } catch (Exception ignored) {}
     }
 }

@@ -13,22 +13,27 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Build desktop jar with bundled assets
+      - name: Build desktop jar
         run: ./gradlew :desktop:jar --no-daemon
-        shell: bash
-      - name: Verify jar contains assets
-        run: jar tf desktop/build/libs/desktop.jar | grep -E "(models|fonts|music|interface)" | head -20
         shell: bash
       - name: Prepare
         run: |
           mkdir -p dist
           cp desktop/build/libs/desktop.jar dist/MiniMilitary3D.jar
         shell: bash
-      - name: Create EXE with console
-        run: jpackage --type exe --input dist --main-jar MiniMilitary3D.jar --main-class com.minimilitary3d.DesktopLauncher --name "MiniMilitary3D" --app-version 0.2 --win-console --win-shortcut --win-menu --win-dir-chooser --dest dist-final
+      - name: Create EXE
+        run: jpackage --type app-image --input dist --main-jar MiniMilitary3D.jar --main-class com.minimilitary3d.DesktopLauncher --name "MiniMilitary3D" --app-version 0.2 --dest dist-final
+        shell: bash
+      - name: Bundle run.bat
+        run: cp desktop/run.bat dist-final/MiniMilitary3D/run.bat
+        shell: bash
+      - name: Zip app-image
+        run: |
+          cd dist-final
+          powershell Compress-Archive -Path MiniMilitary3D -DestinationPath MiniMilitary3D-PORTABLE.zip -Force
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
-          name: MiniMilitary3D-installer
-          path: dist-final/*.exe
+          name: MiniMilitary3D-portable
+          path: dist-final/*.zip
           retention-days: 30
