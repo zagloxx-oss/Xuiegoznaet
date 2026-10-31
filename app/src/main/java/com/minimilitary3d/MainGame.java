@@ -97,10 +97,8 @@ public class MainGame extends Game {
                     + " BackBuffer=" + bbw + "x" + bbh);
             }
 
-            // 🔧 ФИКС HiDPI: рендерим на РЕАЛЬНЫЙ framebuffer
-            if (bbw != w || bbh != h) {
-                Gdx.gl.glViewport(0, 0, bbw, bbh);
-            }
+            // 🔧 ФИКС HiDPI: всегда на весь framebuffer
+            Gdx.gl.glViewport(0, 0, bbw, bbh);
         }
         super.render();
     }

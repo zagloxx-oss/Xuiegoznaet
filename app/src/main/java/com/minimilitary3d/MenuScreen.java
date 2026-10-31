@@ -180,6 +180,23 @@ public class MenuScreen extends ScreenAdapter {
         return x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h;
     }
 
+
+    private void layoutButtons() {
+        float cx = Gdx.graphics.getWidth() / 2f;
+        float btnW = Gdx.graphics.getWidth() * 0.55f;
+        float btnH = Gdx.graphics.getHeight() * 0.09f;
+        float gap = 20f;
+        float startY = Gdx.graphics.getHeight() * 0.55f;
+
+        Button[] btns = {btnSingle, btnCreate, btnJoin, btnSettings, btnExit};
+        for (int i = 0; i < btns.length; i++) {
+            btns[i].x = cx - btnW / 2f;
+            btns[i].y = startY - (btnH + gap) * i;
+            btns[i].w = btnW;
+            btns[i].h = btnH;
+        }
+    }
+
     @Override
     public void render(float delta) {
         time += delta;
@@ -306,7 +323,9 @@ public class MenuScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         uiCam.setToOrtho(false, width, height);
         batch.setProjectionMatrix(uiCam.combined);
+        shapes.setProjectionMatrix(shapes.getProjectionMatrix());
         shapes.setProjectionMatrix(uiCam.combined);
+        layoutButtons();
     }
 
     @Override
