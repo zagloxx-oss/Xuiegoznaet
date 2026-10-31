@@ -76,4 +76,29 @@ public class MainGame extends Game {
         GameSettings.save();
         super.dispose();
     }
+
+    private boolean loggedSizes = false;
+
+    @Override
+    public void render() {
+        if (Gdx.graphics != null) {
+            int bbw = Gdx.graphics.getBackBufferWidth();
+            int bbh = Gdx.graphics.getBackBufferHeight();
+            int w = Gdx.graphics.getWidth();
+            int h = Gdx.graphics.getHeight();
+
+            if (!loggedSizes) {
+                loggedSizes = true;
+                System.out.println("[DPI] Window=" + w + "x" + h
+                    + " BackBuffer=" + bbw + "x" + bbh);
+            }
+
+            // 🔧 ФИКС HiDPI: рендерим на РЕАЛЬНЫЙ framebuffer
+            if (bbw != w || bbh != h) {
+                Gdx.gl.glViewport(0, 0, bbw, bbh);
+            }
+        }
+        super.render();
+    }
+
 }
