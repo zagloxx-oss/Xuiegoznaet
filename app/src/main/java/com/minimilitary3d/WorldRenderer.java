@@ -342,6 +342,28 @@ public class WorldRenderer {
         if (botsLoaded) return;
         botsLoaded = true;
 
+        // ПРОСТЫЕ КУБЫ вместо knight.glb (обход PBR-крашей)
+        ModelBuilder mb = new ModelBuilder();
+        Material botMat = new Material(
+                PBRColorAttribute.createBaseColorFactor(new Color(1f, 0.3f, 0.3f, 1f)),
+                PBRColorAttribute.createEmissive(new Color(1f, 0f, 0f, 1f))
+        );
+        Model botModel = mb.createBox(0.8f, 1.8f, 0.8f, botMat,
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+
+        for (int i = 0; i < 5; i++) {
+            ModelInstance inst = new ModelInstance(botModel);
+            Scene s = new Scene(inst);
+            s.modelInstance.transform.setToTranslation(0, -1000, 0);
+            sceneManager.addScene(s);
+            botScenes[i] = s;
+            botAnims[i] = null;
+        }
+        Gdx.app.log("BOTS", "Loaded as simple boxes (no gltf)");
+    }
+
+    private void loadBotsOriginal() {
+        // оригинальная gltf-версия (не вызывается)
         try {
             SceneAsset asset = new GLBLoader().load(Gdx.files.internal("models/knight.glb"));
 
@@ -478,6 +500,7 @@ public class WorldRenderer {
     //                  МУЛЬТИПЛЕЕРНЫЙ ВРАГ
     // =========================================================
     private void loadArmor() {
+        if (true) return; // ВЫРЕЗАНО: gltf-модель отключена
         try {
             SceneAsset asset = new GLBLoader().load(Gdx.files.internal("models/armor.glb"));
             armorScene = new Scene(asset.scene);
@@ -506,6 +529,7 @@ public class WorldRenderer {
     }
 
     private void loadBomb() {
+        if (true) return; // ВЫРЕЗАНО: gltf-модель отключена
         try {
             SceneAsset asset = new GLBLoader().load(Gdx.files.internal("models/c4.glb"));
             bombScene = new Scene(asset.scene);
@@ -531,6 +555,7 @@ public class WorldRenderer {
     }
 
     private void loadWeapon() {
+        if (true) return; // ВЫРЕЗАНО: gltf-модель отключена
         try {
             SceneAsset asset = new GLBLoader().load(Gdx.files.internal("models/fps_ak-74m_animations.glb"));
             weaponScene = new Scene(asset.scene);
@@ -566,6 +591,7 @@ public class WorldRenderer {
     }
 
     private void loadEnemy() {
+        if (true) return; // ВЫРЕЗАНО: gltf-модель отключена
         try {
             SceneAsset asset = new GLBLoader().load(Gdx.files.internal("models/knight.glb"));
             enemyScene = new Scene(asset.scene);
