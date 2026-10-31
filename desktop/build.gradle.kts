@@ -19,6 +19,17 @@ dependencies {
     implementation("com.github.mgsx-dev.gdx-gltf:gltf:2.3.0")
 }
 
+// Используем исходники из app-модуля (общий код игры)
+sourceSets {
+    main {
+        java {
+            srcDir("../app/src/main/java")
+            exclude("**/MainActivity.java")
+            exclude("**/*Activity.java")
+        }
+    }
+}
+
 application {
     mainClass.set("com.minimilitary3d.DesktopLauncher")
     applicationDefaultJvmArgs = listOf("-Xmx2G", "-Xms512M")
