@@ -182,7 +182,11 @@ public class WorldRenderer {
 
     public void init(boolean isMultiplayer) {
         this.isMultiplayer = isMultiplayer;
-        sceneManager = new SceneManager(512);
+        PBRShaderProvider.Config pbrConfig = new PBRShaderProvider.Config();
+        pbrConfig.numPointLights = 4;
+        pbrConfig.numDirectionalLights = 1;
+        pbrConfig.numSpotLights = 0;
+        sceneManager = new SceneManager(new PBRShaderProvider(pbrConfig));
         environment = new Environment();
 
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.25f, 0.2f, 0.35f, 1f));
