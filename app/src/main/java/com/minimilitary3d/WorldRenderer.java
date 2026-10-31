@@ -181,7 +181,10 @@ public class WorldRenderer {
 
     public void init(boolean isMultiplayer) {
         this.isMultiplayer = isMultiplayer;
-        sceneManager = new SceneManager(new com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider());
+        sceneManager = new SceneManager(
+            new com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider(),
+            net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider.createDefault()
+        );
         environment = new Environment();
 
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.25f, 0.2f, 0.35f, 1f));
