@@ -190,7 +190,7 @@ public class WorldRenderer {
         pbrConfig.numPointLights = 4;
         pbrConfig.numDirectionalLights = 1;
         pbrConfig.numSpotLights = 0;
-        PBRShaderConfig depthConfig = PBRShaderProvider.createDefaultDepthConfig();
+        PBRShaderProvider.Config depthConfig = PBRShaderProvider.createDefaultDepthConfig();
         depthConfig.numBones = 60;
         sceneManager = new SceneManager(new PBRShaderProvider(pbrConfig), new PBRDepthShaderProvider(depthConfig));
         environment = new Environment();
