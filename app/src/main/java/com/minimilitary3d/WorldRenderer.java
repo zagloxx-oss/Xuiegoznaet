@@ -38,7 +38,7 @@ public class WorldRenderer {
     private Environment environment;
     private PointLightEx flashLight, muzzleLight;
     private DirectionalLight dirLight;
-    private PointLightEx[] neonLights = new PointLightEx[5];
+    private PointLightEx[] neonLights = new PointLightEx[4];
 
     private Scene weaponScene, enemyScene, enemyWeaponScene;
     private Scene armorScene, bombScene;
@@ -193,11 +193,10 @@ public class WorldRenderer {
         neonLights[1] = makeNeonEx(new Color(0f, 0.5f, 1f, 1f), new Vector3(25, 10, -25), 3000f, 60f);
         neonLights[2] = makeNeonEx(new Color(1f, 0f, 0.5f, 1f), new Vector3(-25, 10, 25), 3000f, 60f);
         neonLights[3] = makeNeonEx(new Color(0f, 0.5f, 1f, 1f), new Vector3(25, 10, 25), 3000f, 60f);
-        neonLights[4] = makeNeonEx(new Color(0.8f, 0.2f, 1f, 1f), new Vector3(0, 15, 0), 4000f, 80f);
         for (PointLightEx l : neonLights) environment.add(l);
 
         flashLight = makeNeonEx(new Color(1f, 1f, 1f, 1f), new Vector3(0, 0, 0), 10f, 20f);
-        environment.add(flashLight);
+        // flashLight disabled (PBR point light limit is 5)
 
         muzzleLight = makeNeonEx(new Color(1f, 0.7f, 0.2f, 1f), new Vector3(0, 0, 0), 0f, 60f);
         environment.add(muzzleLight);
@@ -369,6 +368,9 @@ public class WorldRenderer {
                 if (botIdleId != null) {
                     botAnims[i].setAnimation(botIdleId, -1);
                     botAnimState[i] = 0;
+                } else if (botWalkId != null) {
+                    botAnims[i].setAnimation(botWalkId, -1);
+                    botAnimState[i] = 1;
                 }
             }
         } catch (Exception e) {
