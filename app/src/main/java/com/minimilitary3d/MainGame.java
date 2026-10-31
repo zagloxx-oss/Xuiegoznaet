@@ -103,4 +103,17 @@ public class MainGame extends Game {
         super.render();
     }
 
+
+    public static void logError(Throwable t) {
+        try (FileWriter fw = new FileWriter("MiniMilitary3D_run.log", true)) {
+            fw.write("\n=== ERROR " + new Date() + " ===\n");
+            fw.write("Thread: " + Thread.currentThread().getName() + "\n");
+            StringWriter sw = new StringWriter();
+            t.printStackTrace(new PrintWriter(sw));
+            fw.write(sw.toString());
+            fw.write("\n");
+        } catch (Exception ignored) {}
+        t.printStackTrace();
+    }
+
 }
