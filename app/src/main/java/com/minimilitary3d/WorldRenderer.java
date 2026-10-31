@@ -33,6 +33,9 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderConfig;
+import net.mgsx.gltf.scene3d.shaders.PBRDepthShaderProvider;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 
 public class WorldRenderer {
     private SceneManager sceneManager;
@@ -182,11 +185,14 @@ public class WorldRenderer {
 
     public void init(boolean isMultiplayer) {
         this.isMultiplayer = isMultiplayer;
-        PBRShaderProvider.Config pbrConfig = new PBRShaderProvider.Config();
+        PBRShaderConfig pbrConfig = PBRShaderProvider.createDefaultConfig();
+        pbrConfig.numBones = 60;
         pbrConfig.numPointLights = 4;
         pbrConfig.numDirectionalLights = 1;
         pbrConfig.numSpotLights = 0;
-        sceneManager = new SceneManager(new PBRShaderProvider(pbrConfig));
+        PBRShaderConfig depthConfig = PBRShaderProvider.createDefaultDepthConfig();
+        depthConfig.numBones = 60;
+        sceneManager = new SceneManager(new PBRShaderProvider(pbrConfig), new PBRDepthShaderProvider(depthConfig));
         environment = new Environment();
 
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.25f, 0.2f, 0.35f, 1f));

@@ -23,9 +23,10 @@ public class DesktopLauncher {
         // Выводим инфу о GPU в лог
         System.out.println("[GPU] OpenGL: " + com.badlogic.gdx.Gdx.gl.glGetString(com.badlogic.gdx.graphics.GL20.GL_VERSION));
         System.out.println("[GPU] Renderer: " + com.badlogic.gdx.Gdx.gl.glGetString(com.badlogic.gdx.graphics.GL20.GL_RENDERER));
-        int[] maxUniforms = new int[1];
-        com.badlogic.gdx.Gdx.gl.glGetIntegerv(0x8B4A /* GL_MAX_VERTEX_UNIFORM_COMPONENTS */, maxUniforms, 0);
-        System.out.println("[GPU] MaxVertexUniforms: " + maxUniforms[0]);
+        
+        java.nio.IntBuffer maxUniforms = java.nio.ByteBuffer.allocateDirect(4).order(java.nio.ByteOrder.nativeOrder()).asIntBuffer();
+        com.badlogic.gdx.Gdx.gl.glGetIntegerv(0x8B4A, maxUniforms);
+        System.out.println("[GPU] MaxVertexUniforms: " + maxUniforms.get(0));
 
         new Lwjgl3Application(new MainGame(), config);
     }
