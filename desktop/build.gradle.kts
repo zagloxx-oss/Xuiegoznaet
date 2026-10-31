@@ -19,7 +19,6 @@ dependencies {
     implementation("com.github.mgsx-dev.gdx-gltf:gltf:2.3.0")
 }
 
-// Используем исходники из app-модуля (общий код игры)
 sourceSets {
     main {
         java {
@@ -27,17 +26,13 @@ sourceSets {
             exclude("**/MainActivity.java")
             exclude("**/*Activity.java")
         }
+        resources {
+            srcDirs("../app/src/main/assets")
+        }
     }
 }
 
 application {
     mainClass.set("com.minimilitary3d.DesktopLauncher")
     applicationDefaultJvmArgs = listOf("-Xmx2G", "-Xms512M")
-}
-
-val assetsDir = file("../app/src/main/assets")
-
-tasks.named<JavaExec>("run") {
-    workingDir = assetsDir
-    classpath = sourceSets.main.get().runtimeClasspath
 }

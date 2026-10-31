@@ -1,7 +1,7 @@
 name: Build EXE
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 jobs:
   build-exe:
@@ -13,17 +13,19 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Build desktop jar
+      - name: Build desktop jar with bundled assets
         run: ./gradlew :desktop:jar --no-daemon
+        shell: bash
+      - name: Verify jar contains assets
+        run: jar tf desktop/build/libs/desktop.jar | grep -E "(models|fonts|music|interface)" | head -20
         shell: bash
       - name: Prepare
         run: |
           mkdir -p dist
           cp desktop/build/libs/desktop.jar dist/MiniMilitary3D.jar
-          cp -r app/src/main/assets dist/assets
         shell: bash
-      - name: Create EXE
-        run: jpackage --type exe --input dist --main-jar MiniMilitary3D.jar --main-class com.minimilitary3d.DesktopLauncher --name "MiniMilitary3D" --app-version 0.2 --win-shortcut --win-menu --win-dir-chooser --dest dist-final
+      - name: Create EXE with console
+        run: jpackage --type exe --input dist --main-jar MiniMilitary3D.jar --main-class com.minimilitary3d.DesktopLauncher --name "MiniMilitary3D" --app-version 0.2 --win-console --win-shortcut --win-menu --win-dir-chooser --dest dist-final
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
